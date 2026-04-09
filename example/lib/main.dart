@@ -25,6 +25,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
 
+    PluginManager.instance.init();
+
     PluginManager.instance.flutterCallNativeApi.sensorGetPresetProperty("hhh").then((value){
 
 

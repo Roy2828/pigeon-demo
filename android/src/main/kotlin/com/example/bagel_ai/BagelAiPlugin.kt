@@ -18,10 +18,16 @@ class BagelAiPlugin: FlutterPlugin, MethodCallHandler, FlutterCallNativeApi {
   private lateinit var channel : MethodChannel
   private var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding?=null
 
+
+  private var nativeCallFlutterApi: NativeCallFlutterApi? = null
+
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "bagel_ai")
     channel.setMethodCallHandler(this)
     this.flutterPluginBinding = flutterPluginBinding;
+
+    nativeCallFlutterApi = NativeCallFlutterApi(flutterPluginBinding.binaryMessenger)
+
     FlutterCallNativeApi.setUp(flutterPluginBinding.binaryMessenger, this)
   }
 
@@ -52,6 +58,10 @@ class BagelAiPlugin: FlutterPlugin, MethodCallHandler, FlutterCallNativeApi {
 
   override fun sensorGetPresetProperty(propertyName: String): String {
     Toast.makeText(flutterPluginBinding?.applicationContext,propertyName+"",0).show()
+
+    nativeCallFlutterApi?.getBagelToken {
+      Toast.makeText(flutterPluginBinding?.applicationContext,it.getOrNull(),0).show()
+    }
       return "sssssddd"
   }
 }
