@@ -111,6 +111,7 @@ protocol FlutterCallNativeApi {
   func getAppInfo() throws -> AppInfo
   func sensorAddTrack(eventName: String, paramsMap: [String: Any], completion: @escaping (Result<Void, Error>) -> Void)
   func sensorGetPresetProperty(propertyName: String) throws -> String
+  func getTest(completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -165,6 +166,21 @@ class FlutterCallNativeApiSetup {
       }
     } else {
       sensorGetPresetPropertyChannel.setMessageHandler(nil)
+    }
+    let getTestChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.pigeon_example_package.FlutterCallNativeApi.getTest\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getTestChannel.setMessageHandler { _, reply in
+        api.getTest { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getTestChannel.setMessageHandler(nil)
     }
   }
 }

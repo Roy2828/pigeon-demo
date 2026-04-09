@@ -32,6 +32,10 @@ abstract class FlutterCallNativeApi {
 
 
   String sensorGetPresetProperty(String propertyName);//神策：获取预制属性
+
+   @async
+    String getTest();
+
 }
 
 class AppInfo {

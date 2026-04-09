@@ -30,6 +30,7 @@ NSObject<FlutterMessageCodec> *BGLFlutterCallNativeApiGetCodec(void);
 - (void)sensorAddTrackEventName:(NSString *)eventName paramsMap:(NSDictionary<NSString *, id> *)paramsMap completion:(void (^)(FlutterError *_Nullable))completion;
 /// @return `nil` only when `error != nil`.
 - (nullable NSString *)sensorGetPresetPropertyPropertyName:(NSString *)propertyName error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)getTestWithCompletion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void SetUpBGLFlutterCallNativeApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<BGLFlutterCallNativeApi> *_Nullable api);

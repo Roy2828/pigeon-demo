@@ -175,6 +175,23 @@ void SetUpBGLFlutterCallNativeApiWithSuffix(id<FlutterBinaryMessenger> binaryMes
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pigeon_example_package.FlutterCallNativeApi.getTest", messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+        codec:BGLFlutterCallNativeApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(getTestWithCompletion:)], @"BGLFlutterCallNativeApi api (%@) doesn't respond to @selector(getTestWithCompletion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        [api getTestWithCompletion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 NSObject<FlutterMessageCodec> *BGLNativeCallFlutterApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;

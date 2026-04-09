@@ -2,7 +2,7 @@
 // See also: https://pub.dev/packages/pigeon
 @file:Suppress("UNCHECKED_CAST", "ArrayInDataClass")
 
-package com.example.bagel_ai
+package android.src.main.kotlin.com.example.bagel_ai
 
 
 import android.util.Log
@@ -100,6 +100,7 @@ interface FlutterCallNativeApi {
   fun getAppInfo(): AppInfo
   fun sensorAddTrack(eventName: String, paramsMap: Map<String, Any>, callback: (Result<Unit>) -> Unit)
   fun sensorGetPresetProperty(propertyName: String): String
+  fun getTest(callback: (Result<String>) -> Unit)
 
   companion object {
     /** The codec used by FlutterCallNativeApi. */
@@ -156,6 +157,24 @@ interface FlutterCallNativeApi {
               wrapError(exception)
             }
             reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.pigeon_example_package.FlutterCallNativeApi.getTest$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getTest() { result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
           }
         } else {
           channel.setMessageHandler(null)

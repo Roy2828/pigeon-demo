@@ -219,6 +219,8 @@ public class Messages {
     @NonNull 
     String sensorGetPresetProperty(@NonNull String propertyName);
 
+    void getTest(@NonNull Result<String> result);
+
     /** The codec used by FlutterCallNativeApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FlutterCallNativeApiCodec.INSTANCE;
@@ -300,6 +302,33 @@ public class Messages {
                   wrapped = wrappedError;
                 }
                 reply.reply(wrapped);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.pigeon_example_package.FlutterCallNativeApi.getTest" + messageChannelSuffix, getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.getTest(resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
